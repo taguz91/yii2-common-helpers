@@ -2,6 +2,7 @@
 
 namespace taguz91\CommonHelpers\Exceptions;
 
+use yii\helpers\Json;
 use yii\mongodb\Exception;
 
 /**
@@ -12,6 +13,6 @@ class DataInvalidException extends Exception
 
   public function __construct(array $data = [], Exception $previous = null)
   {
-    parent::__construct(json_encode($data), 23, $previous);
+    parent::__construct(Json::encode($data), 23, $previous);
   }
 }
