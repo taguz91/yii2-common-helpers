@@ -7,14 +7,9 @@ use yii\behaviors\AttributeTypecastBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
-/**
- * This trait only use with a class who extends from 
- * yii\mongodb\ActiveRecord
- * 
- */
-trait ActiveRecordHelpers
+trait WebActiveRecordHelpers
 {
-
+  
   use ActiveRecordQuerys, CommonActiveRecord;
 
   /**
@@ -33,9 +28,9 @@ trait ActiveRecordHelpers
       ],
       [
         'class' => BlameableBehavior::class,
-        'createdByAttribute' => 'createdIp',
-        'updatedByAttribute' => 'updatedIp',
-        'value' => Utils::getUserIP(),
+        'createdByAttribute' => 'createdBy',
+        'updatedByAttribute' => 'updatedBy',
+        'value' => Utils::getIDActualUser(),
       ],
       'typecast' => [
         'class' => AttributeTypecastBehavior::class,
@@ -59,8 +54,8 @@ trait ActiveRecordHelpers
       '_id',
       'createdAt',
       'updatedAt',
-      'createdIp',
-      'updatedIp'
+      'createdBy',
+      'updatedBy'
     ]);
     return [
       // Todos seguros
@@ -92,8 +87,8 @@ trait ActiveRecordHelpers
     $common = [
       'createdAt',
       'updatedAt',
-      'createdIp',
-      'updatedIp',
+      'createdBy',
+      'updatedBy',
     ];
 
     return array_merge([
@@ -106,13 +101,14 @@ trait ActiveRecordHelpers
    * 
    * @param string|\MongoDB\BSON\ObjectId $id - Id del objeto a eliminar 
    */
-  static function softDeleteById($id, string $estado): bool
+  static function softDeleteById($id, string $estado): int
   {
     $deleted = self::updateAll(
       [$estado => Yii::$app->params['ESTADO_ANULADO']],
       ['_id' => $id]
     );
-    return $deleted > 0;
+    self::deleteFlash($deleted > 0);
+    return $deleted;
   }
 
   /**
@@ -120,9 +116,23 @@ trait ActiveRecordHelpers
    *
    * @return void
    */
-  static function deleteById($id): bool
+  static function deleteById($id)
   {
     $model = self::findByIdOrFail($id);
-    return $model->delete();
+    $deleted = $model->delete();
+    self::deleteFlash($deleted);
   }
+
+  /**
+   * @return void
+   */
+  private static function deleteFlash(bool $deleted)
+  {
+    if ($deleted) {
+      Yii::$app->session->setFlash('success', 'Registro eliminado');
+    } else {
+      Yii::$app->session->setFlash('error', 'No pudimos eliminar el registro');
+    }
+  }
+
 }
