@@ -72,4 +72,15 @@ class RequestHelpers
 
     return $data;
   }
+
+  /**
+   * Obtenemos los datos post como un objeto 
+   */
+  static function getPostDataAsObject() : \stdClass
+  {
+    $data = self::getPostData();
+    $data = DataHelpers::toObject($data);
+    if (is_array($data) || empty($data)) return new \stdClass;
+    return $data;
+  }
 }

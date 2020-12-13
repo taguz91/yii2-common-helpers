@@ -42,4 +42,31 @@ class ResponseHelpers
     ];
     return array_merge($default, $data);
   }
+
+  static function dataResponse($data): array
+  {
+    return [
+      'transaccion' => true,
+      'data' => $data
+    ];
+  }
+
+  /**
+   * Respuesta correcta con un mensaje
+   */
+  static function messageResponse(string $message): array
+  {
+    return [
+      'transaccion' => true,
+      'mensaje' => $message
+    ];
+  }
+
+  static function mergeResponse(array $data): array
+  {
+    $default = [
+      'transaccion' => true,
+    ];
+    return array_merge($default, $data);
+  }
 }
