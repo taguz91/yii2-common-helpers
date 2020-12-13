@@ -2,6 +2,8 @@
 
 namespace taguz91\CommonHelpers;
 
+use taguz91\CommonHelpers\Exceptions\DataNotSaveException;
+
 trait CommonActiveRecord
 {
 
@@ -39,5 +41,22 @@ trait CommonActiveRecord
     $data = array_merge($res, $add);
     ksort($data);
     return $data;
+  }
+
+  /**
+   * 
+   * @throws DataNotSaveException - Al no guardar el documento
+   */
+  public function saveOrFail(string $message): bool
+  {
+    $saved = $this->save();
+    if (!$saved) {
+      throw new DataNotSaveException($message, [
+        'transaccion' => false,
+        'errorDescripcion' => $message,
+        'errors' => $this->getErrors()
+      ]);
+    }
+    return true;
   }
 }

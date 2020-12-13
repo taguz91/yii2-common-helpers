@@ -2,6 +2,9 @@
 
 namespace taguz91\CommonHelpers;
 
+use Yii;
+use yii\web\HttpException;
+
 class RequestHelpers
 {
 
@@ -31,5 +34,42 @@ class RequestHelpers
         }
       }
     }
+  }
+
+  /**
+   * Configuracion para tareas que tardan y usan mucha memoria 
+   */
+  static function longRequest()
+  {
+    ini_set('memory_limit', '2048M');
+    set_time_limit(300);
+  }
+
+  /**
+   * Cargamos los datos del post
+   * 
+   * @throws HttpExeption - Si no tenemos valores en el post
+   */
+  static function getPostDataOrFail(string $message = 'No data found')
+  {
+    $data = self::getPostData();
+    if (empty($data)) {
+      throw new HttpException(405, $message);
+    }
+    return $data;
+  }
+
+  /**
+   * Cargamos los datos del post
+   */
+  static function getPostData()
+  {
+    $data = Yii::$app->request->post();
+    if (empty($data)) {
+      $data = Yii::$app->request->getRawBody();
+      $data = (array) json_decode($data, true);
+    }
+
+    return $data;
   }
 }

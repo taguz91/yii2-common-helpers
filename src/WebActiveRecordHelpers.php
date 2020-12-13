@@ -9,7 +9,7 @@ use yii\behaviors\TimestampBehavior;
 
 trait WebActiveRecordHelpers
 {
-  
+
   use ActiveRecordQuerys, CommonActiveRecord;
 
   /**
@@ -129,10 +129,9 @@ trait WebActiveRecordHelpers
   private static function deleteFlash(bool $deleted)
   {
     if ($deleted) {
-      Yii::$app->session->setFlash('success', 'Registro eliminado');
+      Yii::$app->session->setFlash('success', Yii::t('app', 'Registro eliminado'));
     } else {
-      Yii::$app->session->setFlash('error', 'No pudimos eliminar el registro');
+      Yii::$app->session->setFlash('error', Yii::t('app', 'No pudimos eliminar el registro'));
     }
   }
-
 }

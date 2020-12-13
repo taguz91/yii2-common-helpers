@@ -1,16 +1,19 @@
-<?php 
+<?php
 
 namespace taguz91\CommonHelpers;
 
+use taguz91\CommonHelpers\Exceptions\DataInvalidException;
 use Yii;
 use yii\base\Model;
 
-trait ModelHelpers {
+trait ModelHelpers
+{
 
   /**
    * @return array $attributes - Nombre de los atributos de la clase
    */
-  public function getKeysAttributes() {
+  public function getKeysAttributes()
+  {
     return array_keys($this->attributes);
   }
 
@@ -23,11 +26,12 @@ trait ModelHelpers {
    * 
    * @return array $validators
    */
-  public function getCommonValidators(array $notRequired = []) {
+  public function getCommonValidators(array $notRequired = [])
+  {
     return [
       // Todos seguros
       [
-         $this->getKeysAttributes(),
+        $this->getKeysAttributes(),
         'safe',
       ],
       // Agregamos que todos son requreidos 
@@ -45,7 +49,8 @@ trait ModelHelpers {
    * 
    * @return array $validators
    */
-  public function getCommonStringValidators(array $attributes = []) {
+  public function getCommonStringValidators(array $attributes = [])
+  {
     $attributes = empty($attributes) ? $this->getKeysAttributes() : $attributes;
 
     return [
@@ -57,24 +62,27 @@ trait ModelHelpers {
       // Agregamos trim a todos los atributos 
       [
         $attributes,
-        'filter', 
+        'filter',
         'filter' => 'trim'
       ]
     ];
   }
 
-  static function defaultRule(string $campo, $default) : array {
+  static function defaultRule(string $campo, $default): array
+  {
     return [
       $campo, 'default',
       'value' => $default
     ];
-  } 
+  }
 
-  function loadedFromPost(string $nodo = null) : bool {
+  function loadedFromPost(string $nodo = null): bool
+  {
     return $this->load(Yii::$app->request->post(), $nodo);
   }
 
-  function loadedFromGet(string $nodo = null) : bool {
+  function loadedFromGet(string $nodo = null): bool
+  {
     return $this->load(Yii::$app->request->get(), $nodo);
   }
 
@@ -83,9 +91,40 @@ trait ModelHelpers {
    * 
    * @return $this
    */
-  function loadFromPost(string $nodo = null) : Model {
+  function loadFromPost(string $nodo = null): Model
+  {
     $this->load(Yii::$app->request->post(), $nodo);
     return $this;
   }
 
+  /**
+   * Con esta funcion cargamos los datos desde la data a un objecto 
+   * Validamos los datos, si tenemos un error terminamos la aplicacion
+   * 
+   * @param array $data - Valores a ser cargados
+   * @param string $nodo - Nodo de donde se toma los valores
+   * @param string $message - Error de descripcion si no cargamos los datos 
+   * 
+   * @return Model|self - El objeto actual si todos los datos son correctos extends Model
+   * 
+   * @throws DataInvalidException - Si los campos no cumplen las condiciones del modelo
+   */
+  public function loadValidOrEnd(array $data, string $nodo = '', string $message = ''): ?Model
+  {
+    $this->load($data, $nodo);
+    // Si es valido no hacemos nada 
+    if ($this->validate()) return $this;
+    // Si no es valido terminamos la aplicacion y terminamos la aplicacion 
+    $error = [
+      'transaccion' => false,
+      'errorDescripcion' => $message,
+      'errors' => $this->getErrors(),
+    ];
+    
+    if (YII_DEBUG) {
+      $error['data'] = $data;
+    }
+
+    throw new DataInvalidException($error);
+  }
 }

@@ -2,8 +2,28 @@
 
 namespace taguz91\CommonHelpers;
 
+use Yii;
+use yii\web\Response;
+
 class ResponseHelpers
 {
+
+  static function toHTMLResponse()
+  {
+    Yii::$app->response->format = Response::FORMAT_HTML;
+    Yii::$app->response->headers->remove('Content-Type', 'application/json');
+  }
+
+  static function toAPIResponse()
+  {
+    Yii::$app->response->format = Response::FORMAT_JSON;
+    Yii::$app->response->headers->add('Content-Type', 'application/json');
+  }
+
+  static function isJSON()
+  {
+    return Yii::$app->response->format === Response::FORMAT_JSON || Yii::$app->request->isAjax;
+  }
 
   static function mergeMessageResponse(string $message, array $data): array
   {
