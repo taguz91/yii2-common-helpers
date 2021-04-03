@@ -16,10 +16,16 @@
   ],
   "require": {
     "php": ">=7.0.0",
-    "yiisoft/yii2": "~2.0.39.3",
+    "yiisoft/yii2": "~2.0.41",
     "mongodb/mongodb": "1.6.1",
     "yiisoft/yii2-mongodb": "^2.0"
   },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "taguz91\\CommonHelpers\\": "src"
