@@ -4,7 +4,8 @@
   "type": "yii2-extension",
   "keywords": [
     "yii2",
-    "extension"
+    "extension",
+    "helpers"
   ],
   "license": "Apache-2.0",
   "authors": [
