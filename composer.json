@@ -13,8 +13,6 @@
       "email": "johnnygar98@hotmail.com"
     }
   ],
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "require": {
     "php": ">=7.0.0",
     "yiisoft/yii2": "~2.0.39.3",
