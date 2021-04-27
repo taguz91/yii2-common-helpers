@@ -20,6 +20,11 @@
     "mongodb/mongodb": "1.6.1",
     "yiisoft/yii2-mongodb": "^2.0"
   },
+  "config": {
+    "fxp-asset": {
+      "enabled": false
+    }
+  },
   "repositories": [
     {
       "type": "composer",
