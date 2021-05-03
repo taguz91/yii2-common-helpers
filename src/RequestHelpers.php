@@ -61,13 +61,14 @@ class RequestHelpers
 
   /**
    * Cargamos los datos del post
+   * @return array
    */
   static function getPostData()
   {
     $data = Yii::$app->request->post();
     if (empty($data)) {
       $data = Yii::$app->request->getRawBody();
-      $data = (array) json_decode($data, true);
+      $data = json_decode($data, true);
     }
 
     return $data;
@@ -82,5 +83,15 @@ class RequestHelpers
     $data = DataHelpers::toObject($data);
     if (is_array($data) || empty($data)) return new \stdClass;
     return $data;
+  }
+
+  static function getRaw()
+  {
+    return Yii::$app->request->rawBody;
+  }
+
+  static function getRawPost(bool $toArray = false)
+  {
+    return json_decode(self::getRaw(), $toArray);
   }
 }

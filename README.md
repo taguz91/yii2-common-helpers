@@ -10,13 +10,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-composer require taguz91/yii2-common-helpers "*"
+composer require taguz91/yii2-common-helpers
 ```
 
 or add
 
 ```
-"taguz91/yii2-common-helpers": "*"
+"taguz91/yii2-common-helpers": "~1.0.0"
 ```
 
 to the require section of your `composer.json` file.
