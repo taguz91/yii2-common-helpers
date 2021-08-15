@@ -60,7 +60,9 @@ class Utils
     UTCDateTime $date = null,
     string $format = self::DATE_FORMAT
   ): string {
-    if (is_null($date)) return '';
+    if (is_null($date)) {
+      return '';
+    }
     $date = (string) $date;
     return date($format, ($date / 1000));
   }
